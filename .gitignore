@@ -110,7 +110,3 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-### Project ###
-
-idp-private-key.pem
-idp-public-cert.pem
