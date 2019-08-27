@@ -1,3 +1,7 @@
+```
+node app.js --acs http://localhost:3000/sp/postsaml --aud http://localhost:3000
+```
+
 # Introduction
 
 This app provides a simple Identity Provider (IdP) to test SAML 2.0 Service Providers (SPs) with the [SAML 2.0 Web Browser SSO Profile](http://en.wikipedia.org/wiki/SAML_2.0#Web_Browser_SSO_Profile).

@@ -392,6 +392,7 @@ function _runServer(argv) {
    */
 
   const parseSamlRequest = function(req, res, next) {
+	console.log('parseSamlRequest ', req.url);
     samlp.parseRequest(req, function(err, data) {
       if (err) {
         return res.render('error', {
@@ -400,6 +401,7 @@ function _runServer(argv) {
         });
       };
       if (data) {
+	console.log('saml request data ', data);
         req.authnRequest = {
           relayState: req.query.RelayState || req.body.RelayState,
           id: data.id,
@@ -410,6 +412,9 @@ function _runServer(argv) {
         };
         console.log('Received AuthnRequest => \n', req.authnRequest);
       }
+     else {
+		console.log('no data showuser');
+     }
       return showUser(req, res, next);
     })
   };
@@ -441,6 +446,7 @@ function _runServer(argv) {
   app.post(['/', '/idp'], parseSamlRequest);
 
   app.post('/sso', function(req, res) {
+    console.log('sso request ', req.body);
     const authOptions = extend({}, req.idp.options);
     Object.keys(req.body).forEach(function(key) {
       var buffer;
@@ -517,6 +523,20 @@ function _runServer(argv) {
     })
   });
 
+  /*
+app.get('/logout', parseSamlRequest, function(req, res) {
+	samlp.logout({
+      deflate:            true,
+      issuer:             req.idp.options.issuer,
+      protocolBinding:    'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'
+  })(req,res));
+
+  app.post('/logout', parseSamlRequest, function(req, res) {
+	samlp.logout({
+      issuer:             req.idp.options.issuer,
+      protocolBinding:    'urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'
+  })(req,res));
+*/
   app.get(['/settings'], function(req, res, next) {
     res.render('settings', {
       idp: req.idp.options
@@ -548,7 +568,8 @@ function _runServer(argv) {
 
   // catch 404 and forward to error handler
   app.use(function(req, res, next) {
-    const err = new Error('Route Not Found');
+	console.log('not found ', req.url);
+    const err = new Error('Route Not Found ', req.url);
     err.status = 404;
     next(err);
   });
